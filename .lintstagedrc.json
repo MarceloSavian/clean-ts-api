@@ -1,5 +1,6 @@
 {
     "*.ts": [
+        "git add",
         "eslint 'src/**' --fix",
         "git add"
     ]
