@@ -2,6 +2,7 @@
     "*.ts": [
         "git add",
         "eslint 'src/**' --fix",
+        "npm run teste:staged",
         "git add"
     ]
 }
