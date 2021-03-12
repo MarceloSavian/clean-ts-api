@@ -19,7 +19,7 @@ describe('Account Mongo Repository', () => {
     await mongoHelper.disconnect()
   })
   beforeEach(async () => {
-    const accountCollection = mongoHelper.getCollection('accounts')
+    const accountCollection = await mongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
   test('Should retun an account on success', async () => {
