@@ -3,8 +3,8 @@ import { ServerError } from '../../errors'
 import { AccountModel } from '../../../domain/models/account'
 import { AddAccount } from './signup-protocols'
 import { HttpRequest } from '../../protocols'
-import { serverError, badRequest, ok } from '../../helpers/http-helper'
-import { Validation } from '../../helpers/validators/validation'
+import { serverError, badRequest, ok } from '../../helpers/http/http-helper'
+import { Validation } from '../../protocols/validation'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
