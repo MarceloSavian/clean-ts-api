@@ -1,5 +1,4 @@
 import { Authentication, EmailValidator, HttpRequest } from './login-protocols'
-import { InvalidParamError } from '../../errors'
 import { badRequest, ok, serverError, unauthorized } from '../../helpers/http/http-helper'
 import { LoginController } from './login'
 import { Validation } from '../../protocols/validation'
@@ -58,15 +57,6 @@ const makeSut = (): SutInterface => {
 }
 
 describe('Login Controlle', () => {
-  test('Should return 400 if an invalid email is provided', async () => {
-    const { sut } = makeSut()
-
-    jest.spyOn(sut, 'handle').mockReturnValueOnce(Promise.resolve(badRequest(new InvalidParamError('email'))))
-
-    const response = await sut.handle(makeFakeRequest())
-
-    expect(response).toEqual(badRequest(new InvalidParamError('email')))
-  })
   test('Should call Authentication with correct values', async () => {
     const { sut, authentication } = makeSut()
 
@@ -74,7 +64,10 @@ describe('Login Controlle', () => {
 
     await sut.handle(makeFakeRequest())
 
-    expect(authSpy).toHaveBeenCalledWith(makeFakeRequest().body.email, makeFakeRequest().body.password)
+    expect(authSpy).toHaveBeenCalledWith({
+      email: makeFakeRequest().body.email,
+      password: makeFakeRequest().body.password
+    })
   })
   test('Should return 401 invalid credentials are provided', async () => {
     const { sut, authentication } = makeSut()
