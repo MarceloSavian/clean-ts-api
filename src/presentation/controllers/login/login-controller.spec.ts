@@ -1,6 +1,6 @@
-import { Authentication, EmailValidator, HttpRequest } from './login-protocols'
+import { Authentication, EmailValidator, HttpRequest } from './login-controller-protocols'
 import { badRequest, ok, serverError, unauthorized } from '../../helpers/http/http-helper'
-import { LoginController } from './login'
+import { LoginController } from './login-controller'
 import { Validation } from '../../protocols/validation'
 
 interface SutInterface {
