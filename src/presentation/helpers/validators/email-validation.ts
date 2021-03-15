@@ -1,4 +1,4 @@
-import { EmailValidatorAdapter } from '../../../utils/email-validator-adapter'
+import { EmailValidatorAdapter } from '../../../main/adapters/validators/email-validator-adapter'
 import { InvalidParamError } from '../../errors'
 import { Validation } from '../../protocols/validation'
 
