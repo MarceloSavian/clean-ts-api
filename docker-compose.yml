@@ -21,4 +21,4 @@ services:
     links:
       - mongo
     environment: 
-      MONGO_URL=mongodb://mongo:27017/clean-node-api
+      - MONGO_URL=mongodb://mongo:27017/clean-node-api
