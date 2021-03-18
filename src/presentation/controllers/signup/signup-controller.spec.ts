@@ -1,7 +1,7 @@
 import { SignUpController } from './signup-controller'
 import { ServerError } from '../../errors'
 import { AccountModel } from '../../../domain/models/account'
-import { AddAccount } from './signup-controller-protocols'
+import { AddAccount, Authentication } from './signup-controller-protocols'
 import { HttpRequest } from '../../protocols'
 import { serverError, badRequest, ok } from '../../helpers/http/http-helper'
 import { Validation } from '../../protocols/validation'
@@ -26,6 +26,7 @@ interface SutTypes {
   sut: SignUpController
   addAccountStub: AddAccount
   validationStub: Validation
+  authentication: Authentication
 }
 
 const makeValidation = (): Validation => {
@@ -35,6 +36,15 @@ const makeValidation = (): Validation => {
     }
   }
   return new ValidationStub()
+}
+
+const makeAuthentication = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async auth (): Promise<string | null> {
+      return Promise.resolve('any_token')
+    }
+  }
+  return new AuthenticationStub()
 }
 
 const makeAddAcount = (): AddAccount => {
@@ -51,11 +61,13 @@ const makeAddAcount = (): AddAccount => {
 const makeSut = (): SutTypes => {
   const addAccountStub = makeAddAcount()
   const validationStub = makeValidation()
-  const sut = new SignUpController(addAccountStub, validationStub)
+  const authentication = makeAuthentication()
+  const sut = new SignUpController(addAccountStub, validationStub, authentication)
   return {
     sut,
     addAccountStub,
-    validationStub
+    validationStub,
+    authentication
   }
 }
 
@@ -92,7 +104,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(ok(makeFakeAccount()))
   })
-  test('Should call Validtion with correct values', async () => {
+  test('Should call Validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
 
     const validateSpy = jest.spyOn(validationStub, 'validate')
@@ -109,5 +121,17 @@ describe('SignUp Controller', () => {
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new Error()))
+  })
+  test('Should call Authentication with correct values', async () => {
+    const { sut, authentication } = makeSut()
+
+    const authSpy = jest.spyOn(authentication, 'auth')
+
+    await sut.handle(makeFakeRequest())
+
+    expect(authSpy).toHaveBeenCalledWith({
+      email: makeFakeRequest().body.email,
+      password: makeFakeRequest().body.password
+    })
   })
 })
