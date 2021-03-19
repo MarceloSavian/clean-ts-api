@@ -46,4 +46,9 @@ describe('DbAddSurvey UseCase', () => {
     const error = sut.add(makeFakeAddSurvey())
     await expect(error).rejects.toThrow()
   })
+  test('Should returns null if succeds', async () => {
+    const { sut } = makeSut()
+    const res = await sut.add(makeFakeAddSurvey())
+    expect(res).toBeNull()
+  })
 })
