@@ -13,7 +13,7 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
     return mongoHelper.map(result.ops[0])
   }
 
-  async loadByEmail (email: string): Promise<AccountModel | null> {
+  async loadByEmail (email: string): Promise<AccountModel> {
     const accountCollection = await mongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({ email })
     return account && mongoHelper.map(account)
