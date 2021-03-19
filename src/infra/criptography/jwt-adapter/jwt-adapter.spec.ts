@@ -1,32 +1,37 @@
 import jwt from 'jsonwebtoken'
-import { Encrypter } from '../../../data/protocols/criptography/encrypter'
 import { JwtAdapter } from './jwt-adapter'
 
 jest.mock('jsonwebtoken', () => ({
   async sign (): Promise<string> {
     return Promise.resolve('any_token')
+  },
+  async verify (): Promise<string> {
+    return Promise.resolve('any_value')
   }
 }))
 
 interface SutInterface {
-  sut: Encrypter
+  sut: JwtAdapter
+  secret: string
 }
 
 const makeSut = (): SutInterface => {
+  const secret = 'secret'
   const sut = new JwtAdapter('secret')
 
   return {
-    sut
+    sut,
+    secret
   }
 }
 
 describe('Jwt Adapter', () => {
   describe('sign()', () => {
     test('Should call Jwt sign with correct values', async () => {
-      const { sut } = makeSut()
+      const { sut, secret } = makeSut()
       const signSpy = jest.spyOn(jwt, 'sign')
       await sut.encrypt('any_id')
-      expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, 'secret')
+      expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, secret)
     })
     test('Should return a token on sign success', async () => {
       const { sut } = makeSut()
@@ -40,6 +45,14 @@ describe('Jwt Adapter', () => {
       })
       const promise = sut.encrypt('any_id')
       await expect(promise).rejects.toThrow()
+    })
+  })
+  describe('verify()', () => {
+    test('Should call Jwt verify with correct values', async () => {
+      const { sut, secret } = makeSut()
+      const signSpy = jest.spyOn(jwt, 'verify')
+      await sut.decrypt('any_id')
+      expect(signSpy).toHaveBeenCalledWith('any_id', secret)
     })
   })
 })
