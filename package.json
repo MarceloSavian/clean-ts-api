@@ -13,6 +13,7 @@
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
+    "test:coveralls": "npm run test:ci && coveralls < coverage/lcov.info",
     "prepare": "husky install",
     "up": "sudo npm run build && sudo docker-compose up -d",
     "down": "sudo docker-compose down"
@@ -31,6 +32,7 @@
     "@types/supertest": "^2.0.10",
     "@types/validator": "^13.1.3",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
+    "coveralls": "^3.1.0",
     "eslint": "^7.21.0",
     "eslint-config-standard-with-typescript": "^11.0.1",
     "eslint-plugin-import": "^2.22.1",
