@@ -10,7 +10,7 @@ type SutTypes = {
 const makeFakeSurveyResult = (): SaveSurveyResultModel => ({
   surveyId: 'any_id',
   accountId: 'any_id',
-  asnwer: 'any_answer',
+  answer: 'any_answer',
   date: new Date()
 })
 
