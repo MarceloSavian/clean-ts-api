@@ -8,6 +8,27 @@ import env from '../config/env'
 let surveyCollection: Collection
 let accountCollection: Collection
 
+const makeUserOnCollection = async (role?: string): Promise<string> => {
+  let userData: any = {
+    name: 'Test',
+    emai: 'test@gmail.com',
+    password: 'any_password'
+  }
+  if (role) userData = { ...userData, role }
+
+  const res = await accountCollection.insertOne(userData)
+  const id = res.ops[0]._id
+  const accessToken = sign({ id }, env.jwtSecret)
+  await accountCollection.updateOne({
+    _id: id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  return accessToken
+}
+
 describe('Auth routes', () => {
   beforeAll(async () => {
     await mongoHelper.connect(String(process.env.MONGO_URL))
@@ -42,21 +63,7 @@ describe('Auth routes', () => {
     })
   })
   test('Should return 204 on survey with access-token', async () => {
-    const res = await accountCollection.insertOne({
-      name: 'Test',
-      emai: 'test@gmail.com',
-      password: 'any_passowrd',
-      role: 'admin'
-    })
-    const id = res.ops[0]._id
-    const accessToken = sign({ id }, env.jwtSecret)
-    await accountCollection.updateOne({
-      _id: id
-    }, {
-      $set: {
-        accessToken
-      }
-    })
+    const accessToken = await makeUserOnCollection('admin')
     await request(app)
       .post('/api/surveys')
       .set('x-access-token', accessToken)
@@ -73,5 +80,19 @@ describe('Auth routes', () => {
         ]
       })
       .expect(204)
+  })
+  describe('GET /surveys', () => {
+    test('Should return 403 on survey without access-token', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(403)
+    })
+    test('Should return 204 on survey with access-token', async () => {
+      const accessToken = await makeUserOnCollection()
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(204)
+    })
   })
 })
