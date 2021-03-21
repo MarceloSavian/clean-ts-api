@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import request from 'supertest'
-import { mongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
+import { mongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import app from '../config/app'
 
 let accountCollection: Collection
