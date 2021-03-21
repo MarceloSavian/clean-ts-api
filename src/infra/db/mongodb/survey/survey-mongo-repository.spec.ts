@@ -1,6 +1,7 @@
 import { Collection } from 'mongodb'
 import { mongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
+import MockDate from 'mockdate'
 
 interface SutInterface {
   sut: SurveyMongoRepository
@@ -14,6 +15,12 @@ const makeSut = (): SutInterface => {
 
 describe('Account Mongo Repository', () => {
   let surveyCollection: Collection
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+  beforeAll(() => {
+    MockDate.reset()
+  })
   beforeAll(async () => {
     await mongoHelper.connect(String(process.env.MONGO_URL))
   })
@@ -36,7 +43,8 @@ describe('Account Mongo Repository', () => {
         {
           answer: 'any_answer'
         }
-      ]
+      ],
+      date: new Date()
     })
     const survey = await surveyCollection.findOne({ question: 'any_question' })
     expect(survey).toBeTruthy()
