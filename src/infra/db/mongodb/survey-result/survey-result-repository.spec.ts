@@ -53,6 +53,11 @@ const insertAccount = async (): Promise<AccountModel> => {
   return mongoHelper.map(res.ops[0])
 }
 
+const insertSurveyResult = async (surveyId: string, accountId: string): Promise<SurveyResultModel> => {
+  const res = await surveyResultCollection.insertOne(makeFakeSurveyResult(surveyId, accountId))
+  return mongoHelper.map(res.ops[0])
+}
+
 const makeFakeSurveyResultWithId = (id: string, surveyId: string, accountId: string): SurveyResultModel => ({
   id,
   ...makeFakeSurveyResult(surveyId, accountId)
@@ -94,6 +99,21 @@ describe('Survey Result Mongo Repository', () => {
         survey.id,
         account.id
       ))
+      expect(surveyResult).toEqual(makeFakeSurveyResultWithId(surveyResult.id, survey.id, account.id))
+    })
+    test('Should update Survey Result if its not new', async () => {
+      const { sut } = makeSut()
+      const survey = await insertSurvey()
+      const account = await insertAccount()
+      const res = await insertSurveyResult(
+        survey.id,
+        account.id
+      )
+      const surveyResult = await sut.save(makeFakeSurveyResult(
+        survey.id,
+        account.id
+      ))
+      expect(res.id).toEqual(surveyResult.id)
       expect(surveyResult).toEqual(makeFakeSurveyResultWithId(surveyResult.id, survey.id, account.id))
     })
   })
