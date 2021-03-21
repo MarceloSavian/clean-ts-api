@@ -3,7 +3,7 @@ import { badRequest, ok, serverError, unauthorized } from '@/presentation/helper
 import { LoginController } from './login-controller'
 import { Validation } from '@/presentation/protocols/validation'
 
-interface SutInterface {
+type SutTypes = {
   sut: LoginController
   emailValidator: EmailValidator
   authentication: Authentication
@@ -44,7 +44,7 @@ const makeValidation = (): Validation => {
   return new ValidationStub()
 }
 
-const makeSut = (): SutInterface => {
+const makeSut = (): SutTypes => {
   const emailValidator = makeEmailValidator()
   const authentication = makeAuthentication()
   const validationStub = makeValidation()

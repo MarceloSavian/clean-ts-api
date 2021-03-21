@@ -8,7 +8,7 @@ import {
 } from './db-authentication-protocols'
 import { DbAuthentication } from './db-authentication'
 
-interface SutInterface {
+type SutTypes = {
   sut: DbAuthentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   hashCompareStub: HashCompare
@@ -64,7 +64,7 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   return new LoadAccountByEmailRepositoryStub()
 }
 
-const makeSut = (): SutInterface => {
+const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
   const hashCompareStub = makeHashCompare()
   const encrypterStub = makeEncrypter()

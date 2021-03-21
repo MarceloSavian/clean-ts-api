@@ -2,7 +2,7 @@ import { MissingParamError } from '@/presentation/errors'
 import { Validation } from '@/presentation/protocols'
 import { ValidationComposite } from './validation-composite'
 
-interface SutInterface {
+type SutTypes = {
   sut: ValidationComposite
   validations: Validation[]
 }
@@ -16,7 +16,7 @@ const makeValidation = (): Validation => {
   return new ValidationStub()
 }
 
-const makeSut = (): SutInterface => {
+const makeSut = (): SutTypes => {
   const validations = [makeValidation(), makeValidation()]
   const sut = new ValidationComposite(validations)
   return {

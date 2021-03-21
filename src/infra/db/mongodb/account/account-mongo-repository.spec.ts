@@ -2,11 +2,11 @@ import { Collection } from 'mongodb'
 import { mongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
 
-interface SutInterface {
+type SutTypes = {
   sut: AccountMongoRepository
 }
 
-const makeSut = (): SutInterface => {
+const makeSut = (): SutTypes => {
   return {
     sut: new AccountMongoRepository()
   }

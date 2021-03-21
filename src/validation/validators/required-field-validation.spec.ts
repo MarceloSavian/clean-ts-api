@@ -1,11 +1,11 @@
 import { MissingParamError } from '@/presentation/errors'
 import { RequiredFieldValidation } from './required-field-validation'
 
-interface SutInterface {
+type SutTypes = {
   sut: RequiredFieldValidation
 }
 
-const makeSut = (): SutInterface => {
+const makeSut = (): SutTypes => {
   const sut = new RequiredFieldValidation('name')
   return {
     sut

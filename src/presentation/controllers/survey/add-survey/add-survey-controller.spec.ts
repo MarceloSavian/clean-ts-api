@@ -3,7 +3,7 @@ import { AddSurveyController } from './add-survey-controller'
 import { HttpRequest, Validation, AddSurvey } from './add-surver-controller-protocols'
 import MockDate from 'mockdate'
 
-interface SutInterface {
+type SutTypes = {
   sut: AddSurveyController
   validationStub: Validation
   addSurveyStub: AddSurvey
@@ -38,7 +38,7 @@ const makeAddSurvey = (): AddSurvey => {
   return new AddSurveyStub()
 }
 
-const makeSut = (): SutInterface => {
+const makeSut = (): SutTypes => {
   const validationStub = makeValidation()
   const addSurveyStub = makeAddSurvey()
   return {

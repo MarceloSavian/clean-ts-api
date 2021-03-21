@@ -3,7 +3,7 @@ import { AccessDeniedError } from '../errors'
 import { AuthMiddleware } from './auth-middleware'
 import { AccountModel, LoadAccountByToken, HttpRequest } from './auth-middleware-protocols'
 
-interface SutInterface {
+type SutTypes = {
   sut: AuthMiddleware
   loadAccountByTokenStub: LoadAccountByToken
 }
@@ -30,7 +30,7 @@ const makeLoadAccountByToken = (): LoadAccountByToken => {
   return new LoadAccountByTokenStub()
 }
 
-const makeSut = (role?: string): SutInterface => {
+const makeSut = (role?: string): SutTypes => {
   const loadAccountByTokenStub = makeLoadAccountByToken()
   return {
     sut: new AuthMiddleware(loadAccountByTokenStub, role),

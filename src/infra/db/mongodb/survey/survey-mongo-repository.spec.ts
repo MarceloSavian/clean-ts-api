@@ -4,7 +4,7 @@ import { SurveyMongoRepository } from './survey-mongo-repository'
 import MockDate from 'mockdate'
 import { AddSurveyModel } from '@/domain/usecases/add-survey'
 
-interface SutInterface {
+type SutTypes = {
   sut: SurveyMongoRepository
 }
 const makeFakeSurvey = (): AddSurveyModel => ({
@@ -21,7 +21,7 @@ const makeFakeSurvey = (): AddSurveyModel => ({
   date: new Date()
 })
 
-const makeSut = (): SutInterface => {
+const makeSut = (): SutTypes => {
   return {
     sut: new SurveyMongoRepository()
   }

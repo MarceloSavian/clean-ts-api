@@ -3,7 +3,7 @@ import { AccountModel } from '@/data/usecases/add-account/db-add-account-protoco
 import { DbLoadAccountByToken } from './db-load-account-by-token'
 import { LoadAccountByTokenRepository } from '@/data/protocols/db/account/load-account-by-token-repository'
 
-interface SutInterface {
+type SutTypes = {
   sut: DbLoadAccountByToken
   decrypterStub: Decrypter
   loadAccountByTokenRepositoryStub: LoadAccountByTokenRepository
@@ -34,7 +34,7 @@ const makeLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
   return new LoadAccountByTokenRepositoryStub()
 }
 
-const makeSut = (): SutInterface => {
+const makeSut = (): SutTypes => {
   const decrypterStub = makeDecrypter()
   const loadAccountByTokenRepositoryStub = makeLoadAccountByTokenRepository()
   return {
