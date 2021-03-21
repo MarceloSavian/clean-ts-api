@@ -3,6 +3,7 @@ import { mongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import MockDate from 'mockdate'
 import { AddSurveyModel } from '@/domain/usecases/add-survey'
+import { SurveyModel } from '@/domain/models/survey'
 
 type SutTypes = {
   sut: SurveyMongoRepository
@@ -19,6 +20,11 @@ const makeFakeSurvey = (): AddSurveyModel => ({
     }
   ],
   date: new Date()
+})
+
+const makeFakeSurveyWithId = (id: string): SurveyModel => ({
+  id,
+  ...makeFakeSurvey()
 })
 
 const makeSut = (): SutTypes => {
@@ -69,6 +75,15 @@ describe('Account Mongo Repository', () => {
       const { sut } = makeSut()
       const surveys = await sut.loadAll()
       expect(surveys.length).toBe(0)
+    })
+  })
+  describe('loadById()', () => {
+    test('Should load a Survey by id on success', async () => {
+      const { sut } = makeSut()
+      const result = await surveyCollection.insertOne(makeFakeSurvey())
+      const id = result.ops[0]?._id
+      const survey = await sut.loadById(id)
+      expect(survey).toEqual(makeFakeSurveyWithId(id))
     })
   })
 })
