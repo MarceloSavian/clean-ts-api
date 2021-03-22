@@ -6,7 +6,7 @@ import app from '../config/app'
 import env from '../config/env'
 import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { SurveyModel } from '@/domain/models/survey'
-import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
+import { mockAddSurveyParams } from '@/domain/test'
 
 let surveyCollection: Collection
 let accountCollection: Collection
@@ -32,17 +32,8 @@ const mockUserOnCollection = async (role?: string): Promise<any> => {
   return accessToken
 }
 
-const mockFakeSurvey = (): AddSurveyParams => ({
-  question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer'
-  }],
-  date: new Date()
-})
-
 const insertSurvey = async (): Promise<SurveyModel> => {
-  const res = await surveyCollection.insertOne(mockFakeSurvey())
+  const res = await surveyCollection.insertOne(mockAddSurveyParams())
   return mongoHelper.map(res.ops[0])
 }
 

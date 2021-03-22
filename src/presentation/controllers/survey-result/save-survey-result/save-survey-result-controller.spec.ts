@@ -4,22 +4,13 @@ import { ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { SaveSurveyResult, SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { SurveyResultModel } from '@/domain/models/survey-result'
 import MockDate from 'mockdate'
+import { mockSurveyModel } from '@/domain/test'
 
 type SutTypes = {
   sut: SaveSurveyResultController
   loadSurveyByIdStub: LoadSurveyById
   saveSurveyResultStub: SaveSurveyResult
 }
-
-const mockFakeSurvey = (): SurveyModel => ({
-  id: 'any_id',
-  question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer'
-  }],
-  date: new Date()
-})
 
 const mockFakeSurveyResult = (): SaveSurveyResultParams => ({
   surveyId: 'any_id',
@@ -55,7 +46,7 @@ const mockSaveSurveyResult = (): SaveSurveyResult => {
 const mockLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {
     async loadById (): Promise<SurveyModel | null> {
-      return Promise.resolve(mockFakeSurvey())
+      return Promise.resolve(mockSurveyModel())
     }
   }
   return new LoadSurveyByIdStub()

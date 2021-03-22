@@ -4,10 +4,9 @@ import { SurveyResultMongoRepository } from './survey-result-repository'
 import MockDate from 'mockdate'
 import { SurveyResultModel } from '@/domain/models/survey-result'
 import { SurveyModel } from '@/domain/models/survey'
-import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
 import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { AccountModel } from '@/domain/models/account'
-import { mockAccountParams } from '@/domain/test'
+import { mockAccountParams, mockAddSurveyParams } from '@/domain/test'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection
@@ -17,29 +16,15 @@ type SutTypes = {
   sut: SurveyResultMongoRepository
 }
 
-const mockFakeSurvey = (): AddSurveyParams => ({
-  question: 'any_question',
-  answers: [
-    {
-      image: 'any_image',
-      answer: 'any_answer'
-    },
-    {
-      answer: 'any_answer'
-    }
-  ],
-  date: new Date()
-})
-
 const mockFakeSurveyResult = (surveyId: string, accountId: string): SaveSurveyResultParams => ({
   surveyId,
   accountId,
-  answer: mockFakeSurvey().answers[0].answer,
+  answer: mockAddSurveyParams().answers[0].answer,
   date: new Date()
 })
 
 const insertSurvey = async (): Promise<SurveyModel> => {
-  const res = await surveyCollection.insertOne(mockFakeSurvey())
+  const res = await surveyCollection.insertOne(mockAddSurveyParams())
   return mongoHelper.map(res.ops[0])
 }
 const insertAccount = async (): Promise<AccountModel> => {
