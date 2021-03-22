@@ -1,3 +1,4 @@
+import { mockDecrypter } from '@/data/test'
 import { mockAccountModel } from '@/domain/test'
 import { DbLoadAccountByToken } from './db-load-account-by-token'
 import { LoadAccountByTokenRepository, AccountModel, Decrypter } from './db-load-account-by-token-protocols'
@@ -6,15 +7,6 @@ type SutTypes = {
   sut: DbLoadAccountByToken
   decrypterStub: Decrypter
   loadAccountByTokenRepositoryStub: LoadAccountByTokenRepository
-}
-
-const mockDecrypter = (): Decrypter => {
-  class DecrypterStub implements Decrypter {
-    async decrypt (): Promise<string | object | null> {
-      return Promise.resolve('any_value')
-    }
-  }
-  return new DecrypterStub()
 }
 
 const mockLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {

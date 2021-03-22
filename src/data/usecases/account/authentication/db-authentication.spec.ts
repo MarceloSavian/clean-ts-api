@@ -8,6 +8,7 @@ import {
 } from './db-authentication-protocols'
 import { DbAuthentication } from './db-authentication'
 import { mockAccountModel } from '@/domain/test'
+import { mockEncrypter, mockHashCompare } from '@/data/test'
 
 type SutTypes = {
   sut: DbAuthentication
@@ -21,24 +22,6 @@ const mockFakeRequest = (): AuthenticationParams => ({
   email: 'any_email@mail.com',
   password: 'any_password'
 })
-
-const mockHashCompare = (): HashCompare => {
-  class HashCompareStub implements HashCompare {
-    async compare (): Promise<boolean> {
-      return Promise.resolve(true)
-    }
-  }
-  return new HashCompareStub()
-}
-
-const mockEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (): Promise<string> {
-      return Promise.resolve('any_token')
-    }
-  }
-  return new EncrypterStub()
-}
 
 const mockUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
   class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
