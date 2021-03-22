@@ -4,10 +4,10 @@ import { SurveyResultMongoRepository } from './survey-result-repository'
 import MockDate from 'mockdate'
 import { SurveyResultModel } from '@/domain/models/survey-result'
 import { SurveyModel } from '@/domain/models/survey'
-import { AddSurveyModel } from '@/domain/usecases/survey/add-survey'
-import { SaveSurveyResultModel } from '@/domain/usecases/survey-result/save-survey-result'
+import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
+import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { AccountModel } from '@/domain/models/account'
-import { AddAccountModel } from '@/domain/usecases/account/add-account'
+import { AddAccountParams } from '@/domain/usecases/account/add-account'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection
@@ -17,7 +17,7 @@ type SutTypes = {
   sut: SurveyResultMongoRepository
 }
 
-const makeFakeSurvey = (): AddSurveyModel => ({
+const makeFakeSurvey = (): AddSurveyParams => ({
   question: 'any_question',
   answers: [
     {
@@ -31,13 +31,13 @@ const makeFakeSurvey = (): AddSurveyModel => ({
   date: new Date()
 })
 
-const makeFakeAccountData = (): AddAccountModel => ({
+const makeFakeAccountData = (): AddAccountParams => ({
   name: 'valid_name',
   email: 'valid_email@email.com',
   password: 'valid_password'
 })
 
-const makeFakeSurveyResult = (surveyId: string, accountId: string): SaveSurveyResultModel => ({
+const makeFakeSurveyResult = (surveyId: string, accountId: string): SaveSurveyResultParams => ({
   surveyId,
   accountId,
   answer: makeFakeSurvey().answers[0].answer,

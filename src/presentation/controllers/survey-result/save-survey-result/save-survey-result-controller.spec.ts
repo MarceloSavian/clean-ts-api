@@ -1,7 +1,7 @@
 import { HttpRequest, LoadSurveyById, SurveyModel, forbidden, InvalidParamError } from './save-survey-result-controller-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controller'
 import { ok, serverError } from '@/presentation/helpers/http/http-helper'
-import { SaveSurveyResult, SaveSurveyResultModel } from '@/domain/usecases/survey-result/save-survey-result'
+import { SaveSurveyResult, SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { SurveyResultModel } from '@/domain/models/survey-result'
 import MockDate from 'mockdate'
 
@@ -21,7 +21,7 @@ const makeFakeSurvey = (): SurveyModel => ({
   date: new Date()
 })
 
-const makeFakeSurveyResult = (): SaveSurveyResultModel => ({
+const makeFakeSurveyResult = (): SaveSurveyResultParams => ({
   surveyId: 'any_id',
   accountId: 'any_id',
   answer: 'any_answer',

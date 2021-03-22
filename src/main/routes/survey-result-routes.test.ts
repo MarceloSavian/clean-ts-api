@@ -4,9 +4,9 @@ import request from 'supertest'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import app from '../config/app'
 import env from '../config/env'
-import { SaveSurveyResultModel } from '@/domain/usecases/survey-result/save-survey-result'
+import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { SurveyModel } from '@/domain/models/survey'
-import { AddSurveyModel } from '@/domain/usecases/survey/add-survey'
+import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
 
 let surveyCollection: Collection
 let accountCollection: Collection
@@ -32,7 +32,7 @@ const makeUserOnCollection = async (role?: string): Promise<any> => {
   return accessToken
 }
 
-const makeFakeSurvey = (): AddSurveyModel => ({
+const makeFakeSurvey = (): AddSurveyParams => ({
   question: 'any_question',
   answers: [{
     image: 'any_image',
@@ -46,7 +46,7 @@ const insertSurvey = async (): Promise<SurveyModel> => {
   return mongoHelper.map(res.ops[0])
 }
 
-const makeFakeSurveyResult = (surveyId: string): Omit<SaveSurveyResultModel, 'accountId'> => ({
+const makeFakeSurveyResult = (surveyId: string): Omit<SaveSurveyResultParams, 'accountId'> => ({
   surveyId,
   answer: 'any_answer',
   date: new Date()
