@@ -7,7 +7,7 @@ import { SurveyModel } from '@/domain/models/survey'
 import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
 import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { AccountModel } from '@/domain/models/account'
-import { AddAccountParams } from '@/domain/usecases/account/add-account'
+import { mockAccountParams } from '@/domain/test'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection
@@ -31,12 +31,6 @@ const mockFakeSurvey = (): AddSurveyParams => ({
   date: new Date()
 })
 
-const mockFakeAccountData = (): AddAccountParams => ({
-  name: 'valid_name',
-  email: 'valid_email@email.com',
-  password: 'valid_password'
-})
-
 const mockFakeSurveyResult = (surveyId: string, accountId: string): SaveSurveyResultParams => ({
   surveyId,
   accountId,
@@ -49,7 +43,7 @@ const insertSurvey = async (): Promise<SurveyModel> => {
   return mongoHelper.map(res.ops[0])
 }
 const insertAccount = async (): Promise<AccountModel> => {
-  const res = await accountCollection.insertOne(mockFakeAccountData())
+  const res = await accountCollection.insertOne(mockAccountParams())
   return mongoHelper.map(res.ops[0])
 }
 

@@ -5,6 +5,7 @@ import { AddAccount, Authentication } from './signup-controller-protocols'
 import { HttpRequest } from '@/presentation/protocols'
 import { serverError, badRequest, ok, forbidden } from '@/presentation/helpers/http/http-helper'
 import { Validation } from '@/presentation/protocols/validation'
+import { mockAccountModel } from '@/domain/test'
 
 const mockFakeRequest = (): HttpRequest => ({
   body: {
@@ -13,13 +14,6 @@ const mockFakeRequest = (): HttpRequest => ({
     password: 'any_password',
     passwordConfirmation: 'any_password'
   }
-})
-
-const mockFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@email.com',
-  password: 'valid_password'
 })
 
 type SutTypes = {
@@ -50,7 +44,7 @@ const mockAuthentication = (): Authentication => {
 const mockAddAcount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     async add (): Promise<AccountModel | null> {
-      const fakeAccount = mockFakeAccount()
+      const fakeAccount = mockAccountModel()
 
       return Promise.resolve(fakeAccount)
     }
