@@ -11,7 +11,7 @@ import { AddSurveyParams } from '@/domain/usecases/survey/add-survey'
 let surveyCollection: Collection
 let accountCollection: Collection
 
-const makeUserOnCollection = async (role?: string): Promise<any> => {
+const mockUserOnCollection = async (role?: string): Promise<any> => {
   let userData: any = {
     name: 'Test',
     emai: 'test@gmail.com',
@@ -32,7 +32,7 @@ const makeUserOnCollection = async (role?: string): Promise<any> => {
   return accessToken
 }
 
-const makeFakeSurvey = (): AddSurveyParams => ({
+const mockFakeSurvey = (): AddSurveyParams => ({
   question: 'any_question',
   answers: [{
     image: 'any_image',
@@ -42,11 +42,11 @@ const makeFakeSurvey = (): AddSurveyParams => ({
 })
 
 const insertSurvey = async (): Promise<SurveyModel> => {
-  const res = await surveyCollection.insertOne(makeFakeSurvey())
+  const res = await surveyCollection.insertOne(mockFakeSurvey())
   return mongoHelper.map(res.ops[0])
 }
 
-const makeFakeSurveyResult = (surveyId: string): Omit<SaveSurveyResultParams, 'accountId'> => ({
+const mockFakeSurveyResult = (surveyId: string): Omit<SaveSurveyResultParams, 'accountId'> => ({
   surveyId,
   answer: 'any_answer',
   date: new Date()
@@ -70,17 +70,17 @@ describe('SurveyResult routes', () => {
     test('Should return 403 on save-survey-result without access-token', async () => {
       await request(app)
         .put('/api/surveys/any_id/results')
-        .send(makeFakeSurveyResult(''))
+        .send(mockFakeSurveyResult(''))
         .expect(403)
     })
     test('Should return 200 on save-survey-result with access-token', async () => {
-      const accessToken = await makeUserOnCollection('admin')
+      const accessToken = await mockUserOnCollection('admin')
       const surveyId = await insertSurvey()
       await request(app)
         .put(`/api/surveys/${surveyId.id}/results`)
         .set('x-access-token', accessToken)
         .send({
-          answer: makeFakeSurveyResult(surveyId.id).answer
+          answer: mockFakeSurveyResult(surveyId.id).answer
         })
         .expect(200)
     })

@@ -7,7 +7,7 @@ type SutTypes = {
   addSurveyRepositoryStub: AddSurveyRepository
 }
 
-const makeFakeAddSurvey = (): AddSurveyParams => {
+const mockFakeAddSurvey = (): AddSurveyParams => {
   return {
     question: 'any_question',
     answers: [{
@@ -18,7 +18,7 @@ const makeFakeAddSurvey = (): AddSurveyParams => {
   }
 }
 
-const makeAddSurveyRepository = (): AddSurveyRepository => {
+const mockAddSurveyRepository = (): AddSurveyRepository => {
   class AddSurveyRepositoryStub implements AddSurveyRepository {
     async add (): Promise<null> {
       return Promise.resolve(null)
@@ -27,8 +27,8 @@ const makeAddSurveyRepository = (): AddSurveyRepository => {
   return new AddSurveyRepositoryStub()
 }
 
-const makeSut = (): SutTypes => {
-  const addSurveyRepositoryStub = makeAddSurveyRepository()
+const mockSut = (): SutTypes => {
+  const addSurveyRepositoryStub = mockAddSurveyRepository()
   return {
     sut: new DbAddSurvey(addSurveyRepositoryStub),
     addSurveyRepositoryStub
@@ -43,20 +43,20 @@ describe('DbAddSurvey UseCase', () => {
     MockDate.reset()
   })
   test('Should call AddSurveyREpository with correct values', async () => {
-    const { sut, addSurveyRepositoryStub } = makeSut()
+    const { sut, addSurveyRepositoryStub } = mockSut()
     const addSpy = jest.spyOn(addSurveyRepositoryStub, 'add')
-    await sut.add(makeFakeAddSurvey())
-    expect(addSpy).toHaveBeenCalledWith(makeFakeAddSurvey())
+    await sut.add(mockFakeAddSurvey())
+    expect(addSpy).toHaveBeenCalledWith(mockFakeAddSurvey())
   })
   test('Should throws if AddSurveyREpository throws', async () => {
-    const { sut, addSurveyRepositoryStub } = makeSut()
+    const { sut, addSurveyRepositoryStub } = mockSut()
     jest.spyOn(addSurveyRepositoryStub, 'add').mockReturnValueOnce(Promise.reject(new Error()))
-    const error = sut.add(makeFakeAddSurvey())
+    const error = sut.add(mockFakeAddSurvey())
     await expect(error).rejects.toThrow()
   })
   test('Should returns null if succeds', async () => {
-    const { sut } = makeSut()
-    const res = await sut.add(makeFakeAddSurvey())
+    const { sut } = mockSut()
+    const res = await sut.add(mockFakeAddSurvey())
     expect(res).toBeNull()
   })
 })

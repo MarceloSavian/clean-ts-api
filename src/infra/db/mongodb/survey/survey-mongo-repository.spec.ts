@@ -8,7 +8,7 @@ import { SurveyModel } from '@/domain/models/survey'
 type SutTypes = {
   sut: SurveyMongoRepository
 }
-const makeFakeSurvey = (): AddSurveyParams => ({
+const mockFakeSurvey = (): AddSurveyParams => ({
   question: 'any_question',
   answers: [
     {
@@ -22,12 +22,12 @@ const makeFakeSurvey = (): AddSurveyParams => ({
   date: new Date()
 })
 
-const makeFakeSurveyWithId = (id: string): SurveyModel => ({
+const mockFakeSurveyWithId = (id: string): SurveyModel => ({
   id,
-  ...makeFakeSurvey()
+  ...mockFakeSurvey()
 })
 
-const makeSut = (): SutTypes => {
+const mockSut = (): SutTypes => {
   return {
     sut: new SurveyMongoRepository()
   }
@@ -53,18 +53,18 @@ describe('Account Mongo Repository', () => {
   })
   describe('add()', () => {
     test('Should insert Survey on success', async () => {
-      const { sut } = makeSut()
-      await sut.add(makeFakeSurvey())
+      const { sut } = mockSut()
+      await sut.add(mockFakeSurvey())
       const survey = await surveyCollection.findOne({ question: 'any_question' })
       expect(survey).toBeTruthy()
     })
   })
   describe('loadAll()', () => {
     test('Should load all Surveys on success', async () => {
-      const { sut } = makeSut()
+      const { sut } = mockSut()
       await surveyCollection.insertMany([
-        makeFakeSurvey(),
-        makeFakeSurvey()
+        mockFakeSurvey(),
+        mockFakeSurvey()
       ])
       const surveys = await sut.loadAll()
       expect(surveys.length).toBe(2)
@@ -73,18 +73,18 @@ describe('Account Mongo Repository', () => {
       expect(surveys[1].question).toBe('any_question')
     })
     test('Should load empty list', async () => {
-      const { sut } = makeSut()
+      const { sut } = mockSut()
       const surveys = await sut.loadAll()
       expect(surveys.length).toBe(0)
     })
   })
   describe('loadById()', () => {
     test('Should load a Survey by id on success', async () => {
-      const { sut } = makeSut()
-      const result = await surveyCollection.insertOne(makeFakeSurvey())
+      const { sut } = mockSut()
+      const result = await surveyCollection.insertOne(mockFakeSurvey())
       const id = result.ops[0]?._id
       const survey = await sut.loadById(id)
-      expect(survey).toEqual(makeFakeSurveyWithId(id))
+      expect(survey).toEqual(mockFakeSurveyWithId(id))
     })
   })
 })

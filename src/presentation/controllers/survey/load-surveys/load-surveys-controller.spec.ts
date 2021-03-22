@@ -8,7 +8,7 @@ type SutTypes = {
   loadSurveyStub: LoadSurvey
 }
 
-const makeFakeSurvey = (): SurveyModel[] => ([{
+const mockFakeSurvey = (): SurveyModel[] => ([{
   id: 'any_id',
   question: 'any_question',
   answers: [{
@@ -18,17 +18,17 @@ const makeFakeSurvey = (): SurveyModel[] => ([{
   date: new Date()
 }])
 
-const makeLoadSurvey = (): LoadSurvey => {
+const mockLoadSurvey = (): LoadSurvey => {
   class LoadSurveyStub implements LoadSurvey {
     async load (): Promise<SurveyModel[]> {
-      return Promise.resolve(makeFakeSurvey())
+      return Promise.resolve(mockFakeSurvey())
     }
   }
   return new LoadSurveyStub()
 }
 
-const makeSut = (): SutTypes => {
-  const loadSurveyStub = makeLoadSurvey()
+const mockSut = (): SutTypes => {
+  const loadSurveyStub = mockLoadSurvey()
   return {
     sut: new LoadSurveysController(loadSurveyStub),
     loadSurveyStub
@@ -43,24 +43,24 @@ describe('LoadSurveys Controller', () => {
     MockDate.reset()
   })
   test('Should call LoadSurveys', async () => {
-    const { sut, loadSurveyStub } = makeSut()
+    const { sut, loadSurveyStub } = mockSut()
     const loadSpy = jest.spyOn(loadSurveyStub, 'load')
     await sut.handle()
     expect(loadSpy).toHaveBeenCalled()
   })
   test('Should return 204 if LoadSurveys returns empty', async () => {
-    const { sut, loadSurveyStub } = makeSut()
+    const { sut, loadSurveyStub } = mockSut()
     jest.spyOn(loadSurveyStub, 'load').mockReturnValueOnce(Promise.resolve([]))
     const httResponse = await sut.handle()
     expect(httResponse).toEqual(noContent())
   })
   test('Should return 200 on success', async () => {
-    const { sut } = makeSut()
+    const { sut } = mockSut()
     const httResponse = await sut.handle()
-    expect(httResponse).toEqual(ok(makeFakeSurvey()))
+    expect(httResponse).toEqual(ok(mockFakeSurvey()))
   })
   test('Should return 500 id LoadSurvey throws', async () => {
-    const { sut, loadSurveyStub } = makeSut()
+    const { sut, loadSurveyStub } = mockSut()
     jest.spyOn(loadSurveyStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
     const httResponse = await sut.handle()
     expect(httResponse).toEqual(serverError(new Error()))
