@@ -4,10 +4,10 @@ import { SurveyResultMongoRepository } from './survey-result-repository'
 import MockDate from 'mockdate'
 import { SurveyResultModel } from '@/domain/models/survey-result'
 import { SurveyModel } from '@/domain/models/survey'
-import { AddSurveyModel } from '@/domain/usecases/add-survey'
-import { SaveSurveyResultModel } from '@/domain/usecases/save-survey-result'
+import { AddSurveyModel } from '@/domain/usecases/survey/add-survey'
+import { SaveSurveyResultModel } from '@/domain/usecases/survey-result/save-survey-result'
 import { AccountModel } from '@/domain/models/account'
-import { AddAccountModel } from '@/domain/usecases/add-account'
+import { AddAccountModel } from '@/domain/usecases/account/add-account'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection

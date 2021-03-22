@@ -2,7 +2,7 @@ import { Collection } from 'mongodb'
 import { mongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import MockDate from 'mockdate'
-import { AddSurveyModel } from '@/domain/usecases/add-survey'
+import { AddSurveyModel } from '@/domain/usecases/survey/add-survey'
 import { SurveyModel } from '@/domain/models/survey'
 
 type SutTypes = {
