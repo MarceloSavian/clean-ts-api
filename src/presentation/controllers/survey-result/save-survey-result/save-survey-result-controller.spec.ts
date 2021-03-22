@@ -39,7 +39,8 @@ const makeFakeRequest = (): HttpRequest => ({
   },
   body: {
     ...makeFakeSurveyResult()
-  }
+  },
+  accountId: makeFakeSurveyResult().accountId
 })
 
 const makeSaveSurveyResult = (): SaveSurveyResult => {
@@ -110,8 +111,8 @@ describe('SaveSurveyResultController', () => {
   })
   test('Should call SaveSurveyResult with correct values', async () => {
     const { sut, saveSurveyResultStub } = makeSut()
-    const loadSpy = jest.spyOn(saveSurveyResultStub, 'save')
+    const saveSpy = jest.spyOn(saveSurveyResultStub, 'save')
     await sut.handle(makeFakeRequest())
-    expect(loadSpy).toBeCalledWith(makeFakeSurveyResult())
+    expect(saveSpy).toBeCalledWith(makeFakeSurveyResult())
   })
 })
