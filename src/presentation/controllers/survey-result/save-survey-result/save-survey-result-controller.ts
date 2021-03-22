@@ -1,3 +1,4 @@
+import { SaveSurveyResult } from '@/domain/usecases/survey-result/save-survey-result'
 import {
   Controller,
   HttpRequest,
@@ -11,7 +12,8 @@ import {
 
 export class SaveSurveyResultController implements Controller {
   constructor (
-    private readonly loadSurveyById: LoadSurveyById
+    private readonly loadSurveyById: LoadSurveyById,
+    private readonly saveSurveyResult: SaveSurveyResult
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -20,10 +22,17 @@ export class SaveSurveyResultController implements Controller {
       const survey = await this.loadSurveyById.loadById(surveyId)
       if (!survey) return forbidden(new InvalidParamError('surveyId'))
 
-      const { answer } = httpRequest.body
+      const { answer, accountId } = httpRequest.body
       const answers = survey.answers.map(a => a.answer)
 
       if (!answers.includes(answer)) return forbidden(new InvalidParamError('answer'))
+
+      await this.saveSurveyResult.save({
+        surveyId,
+        accountId,
+        answer,
+        date: new Date()
+      })
 
       return ok(httpRequest)
     } catch (error) {
