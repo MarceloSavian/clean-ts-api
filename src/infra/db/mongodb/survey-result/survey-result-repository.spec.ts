@@ -4,9 +4,8 @@ import { SurveyResultMongoRepository } from './survey-result-repository'
 import MockDate from 'mockdate'
 import { SurveyResultModel } from '@/domain/models/survey-result'
 import { SurveyModel } from '@/domain/models/survey'
-import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { AccountModel } from '@/domain/models/account'
-import { mockAccountParams, mockAddSurveyParams } from '@/domain/test'
+import { mockAccountParams, mockAddSurveyParams, mockSaveSurveyResultParams, mockSurveyResultModel } from '@/domain/test'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection
@@ -15,13 +14,6 @@ let accountCollection: Collection
 type SutTypes = {
   sut: SurveyResultMongoRepository
 }
-
-const mockFakeSurveyResult = (surveyId: string, accountId: string): SaveSurveyResultParams => ({
-  surveyId,
-  accountId,
-  answer: mockAddSurveyParams().answers[0].answer,
-  date: new Date()
-})
 
 const insertSurvey = async (): Promise<SurveyModel> => {
   const res = await surveyCollection.insertOne(mockAddSurveyParams())
@@ -33,14 +25,9 @@ const insertAccount = async (): Promise<AccountModel> => {
 }
 
 const insertSurveyResult = async (surveyId: string, accountId: string): Promise<SurveyResultModel> => {
-  const res = await surveyResultCollection.insertOne(mockFakeSurveyResult(surveyId, accountId))
+  const res = await surveyResultCollection.insertOne(mockSaveSurveyResultParams(surveyId, accountId))
   return mongoHelper.map(res.ops[0])
 }
-
-const mockFakeSurveyResultWithId = (id: string, surveyId: string, accountId: string): SurveyResultModel => ({
-  id,
-  ...mockFakeSurveyResult(surveyId, accountId)
-})
 
 const mockSut = (): SutTypes => {
   return {
@@ -74,11 +61,11 @@ describe('Survey Result Mongo Repository', () => {
       const { sut } = mockSut()
       const survey = await insertSurvey()
       const account = await insertAccount()
-      const surveyResult = await sut.save(mockFakeSurveyResult(
+      const surveyResult = await sut.save(mockSaveSurveyResultParams(
         survey.id,
         account.id
       ))
-      expect(surveyResult).toEqual(mockFakeSurveyResultWithId(surveyResult.id, survey.id, account.id))
+      expect(surveyResult).toEqual(mockSurveyResultModel(surveyResult.id, survey.id, account.id))
     })
     test('Should update Survey Result if its not new', async () => {
       const { sut } = mockSut()
@@ -88,12 +75,12 @@ describe('Survey Result Mongo Repository', () => {
         survey.id,
         account.id
       )
-      const surveyResult = await sut.save(mockFakeSurveyResult(
+      const surveyResult = await sut.save(mockSaveSurveyResultParams(
         survey.id,
         account.id
       ))
       expect(res.id).toEqual(surveyResult.id)
-      expect(surveyResult).toEqual(mockFakeSurveyResultWithId(surveyResult.id, survey.id, account.id))
+      expect(surveyResult).toEqual(mockSurveyResultModel(surveyResult.id, survey.id, account.id))
     })
   })
 })
