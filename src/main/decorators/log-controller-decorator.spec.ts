@@ -11,7 +11,7 @@ type SutTypes = {
   logErrorRepositoryStub: LogErrorRepository
 }
 
-const mockFakeRequest = (): HttpRequest => ({
+const mockRequest = (): HttpRequest => ({
   body: {
     name: 'any_name',
     email: 'any_email@email.com',
@@ -69,7 +69,7 @@ describe('Log Controller Decorator', () => {
     const { sut } = mockSut()
 
     const httpRequest: HttpRequest = {
-      body: mockFakeRequest()
+      body: mockRequest()
     }
 
     const res = await sut.handle(httpRequest)
@@ -84,7 +84,7 @@ describe('Log Controller Decorator', () => {
     jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(Promise.resolve(mockFakeServerError()))
 
     const httpRequest: HttpRequest = {
-      body: mockFakeRequest()
+      body: mockRequest()
     }
 
     await sut.handle(httpRequest)

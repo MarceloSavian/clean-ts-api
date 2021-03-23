@@ -2,17 +2,11 @@ import { Collection } from 'mongodb'
 import { mongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import MockDate from 'mockdate'
-import { SurveyModel } from '@/domain/models/survey'
-import { mockAddSurveyParams } from '@/domain/test'
+import { mockAddSurveyParams, mockSurveyModel } from '@/domain/test'
 
 type SutTypes = {
   sut: SurveyMongoRepository
 }
-
-const mockSurveyModel = (id: string): SurveyModel => ({
-  id,
-  ...mockAddSurveyParams()
-})
 
 const mockSut = (): SutTypes => {
   return {

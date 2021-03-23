@@ -1,28 +1,20 @@
 import { forbidden, ok, serverError } from '../helpers/http/http-helper'
 import { AccessDeniedError } from '../errors'
 import { AuthMiddleware } from './auth-middleware'
-import { AccountModel, LoadAccountByToken, HttpRequest } from './auth-middleware-protocols'
+import { LoadAccountByToken, HttpRequest } from './auth-middleware-protocols'
 import { mockAccountModel } from '@/domain/test'
+import { mockLoadAccountByToken } from '../test'
 
 type SutTypes = {
   sut: AuthMiddleware
   loadAccountByTokenStub: LoadAccountByToken
 }
 
-const mockFakeRequest = (): HttpRequest => ({
+const mockRequest = (): HttpRequest => ({
   headers: {
     'x-access-token': 'any_token'
   }
 })
-
-const mockLoadAccountByToken = (): LoadAccountByToken => {
-  class LoadAccountByTokenStub implements LoadAccountByToken {
-    async load (): Promise<AccountModel | null> {
-      return Promise.resolve(mockAccountModel())
-    }
-  }
-  return new LoadAccountByTokenStub()
-}
 
 const mockSut = (role?: string): SutTypes => {
   const loadAccountByTokenStub = mockLoadAccountByToken()
@@ -42,26 +34,26 @@ describe('Auth Middleware', () => {
     const role = 'any_role'
     const { sut, loadAccountByTokenStub } = mockSut(role)
     const loadSpy = jest.spyOn(loadAccountByTokenStub, 'load')
-    await sut.handle(mockFakeRequest())
+    await sut.handle(mockRequest())
 
-    expect(loadSpy).toHaveBeenCalledWith(mockFakeRequest().headers['x-access-token'], role)
+    expect(loadSpy).toHaveBeenCalledWith(mockRequest().headers['x-access-token'], role)
   })
   test('Should return 403 LoadAccountByTokent returns null', async () => {
     const { sut, loadAccountByTokenStub } = mockSut()
     jest.spyOn(loadAccountByTokenStub, 'load').mockReturnValueOnce(Promise.resolve(null))
-    const httpResponse = await sut.handle(mockFakeRequest())
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
   test('Should return 200 LoadAccountByTokent returns an account', async () => {
     const { sut } = mockSut()
-    const httpResponse = await sut.handle(mockFakeRequest())
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok({ accountId: mockAccountModel().id }))
   })
 
   test('Should return 500 LoadAccountByTokent throws', async () => {
     const { sut, loadAccountByTokenStub } = mockSut()
     jest.spyOn(loadAccountByTokenStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
-    const httpResponse = await sut.handle(mockFakeRequest())
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

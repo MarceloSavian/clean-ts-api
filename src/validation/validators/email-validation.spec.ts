@@ -1,23 +1,15 @@
 import { EmailValidation } from './email-validation'
 import { EmailValidator } from '../protocols/email-validator'
 import { InvalidParamError } from '@/presentation/errors'
+import { mockEmailValidator } from '../test'
 
 type SutTypes = {
   sut: EmailValidation
   emailValidatorStub: EmailValidator
 }
 
-const mockFakeRequest = (): any => {
+const mockRequest = (): any => {
   return { email: 'any_email@mail.com' }
-}
-
-const mockEmailValidator = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid (): boolean {
-      return true
-    }
-  }
-  return new EmailValidatorStub()
 }
 
 const mockSut = (): SutTypes => {
@@ -35,7 +27,7 @@ describe('SignUp Controller', () => {
 
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
 
-    const httpRequest = mockFakeRequest()
+    const httpRequest = mockRequest()
 
     const error = sut.validate(httpRequest)
     expect(error).toEqual(new InvalidParamError('email'))
@@ -45,7 +37,7 @@ describe('SignUp Controller', () => {
 
     const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
 
-    const httpRequest = mockFakeRequest()
+    const httpRequest = mockRequest()
 
     sut.validate(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')

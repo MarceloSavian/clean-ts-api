@@ -3,8 +3,8 @@ import { SurveyModel } from '@/presentation/controllers/survey/load-surveys/load
 
 export const mockSurveyModelArray = (): SurveyModel[] => ([mockSurveyModel()])
 
-export const mockSurveyModel = (): SurveyModel => ({
-  id: 'any_id',
+export const mockSurveyModel = (id?: string): SurveyModel => ({
+  id: id || 'any_id',
   ...mockAddSurveyParams()
 })
 
