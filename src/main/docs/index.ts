@@ -1,6 +1,6 @@
-import { loginPath } from './paths/login-paths'
-import { accountSchema, loginSchema, errorSchema } from './schemas/'
-import { badRequest, serverError, unauthorized } from './components/'
+import { loginPath, surveyPath } from './paths/'
+import { accountSchema, loginSchema, errorSchema, surveyAnswerSchema, surveySchema, surveysSchema, apiKeyAuthSchema } from './schemas/'
+import { badRequest, serverError, unauthorized, forbidden } from './components/'
 
 export default {
   openapi: '3.0.0',
@@ -18,18 +18,28 @@ export default {
   }],
   tags: [{
     name: 'Login'
+  }, {
+    name: 'Surveys'
   }],
   paths: {
-    '/login': loginPath
+    '/login': loginPath,
+    '/surveys': surveyPath
   },
   schemas: {
     account: accountSchema,
     'login-params': loginSchema,
-    error: errorSchema
+    error: errorSchema,
+    survey: surveySchema,
+    surveys: surveysSchema,
+    surveyAnswer: surveyAnswerSchema
   },
   components: {
+    securitySchemes: {
+      apiKeyAuth: apiKeyAuthSchema
+    },
     badRequest,
     serverError,
-    unauthorized
+    unauthorized,
+    forbidden
   }
 }
