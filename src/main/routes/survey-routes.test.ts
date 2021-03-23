@@ -8,7 +8,7 @@ import env from '../config/env'
 let surveyCollection: Collection
 let accountCollection: Collection
 
-const makeUserOnCollection = async (role?: string): Promise<string> => {
+const mockUserOnCollection = async (role?: string): Promise<string> => {
   let userData: any = {
     name: 'Test',
     emai: 'test@gmail.com',
@@ -63,7 +63,7 @@ describe('Auth routes', () => {
     })
   })
   test('Should return 204 on survey with access-token', async () => {
-    const accessToken = await makeUserOnCollection('admin')
+    const accessToken = await mockUserOnCollection('admin')
     await request(app)
       .post('/api/surveys')
       .set('x-access-token', accessToken)
@@ -88,7 +88,7 @@ describe('Auth routes', () => {
         .expect(403)
     })
     test('Should return 204 on survey with access-token', async () => {
-      const accessToken = await makeUserOnCollection()
+      const accessToken = await mockUserOnCollection()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)

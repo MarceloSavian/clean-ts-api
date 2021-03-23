@@ -5,7 +5,7 @@ type SutTypes = {
   sut: RequiredFieldValidation
 }
 
-const makeSut = (): SutTypes => {
+const mockSut = (): SutTypes => {
   const sut = new RequiredFieldValidation('name')
   return {
     sut
@@ -14,13 +14,13 @@ const makeSut = (): SutTypes => {
 
 describe('Required field validation', () => {
   test('Should return a MissingParamError if validation fails', () => {
-    const { sut } = makeSut()
+    const { sut } = mockSut()
 
     const err = sut.validate({})
     expect(err).toEqual(new MissingParamError('name'))
   })
   test('Should return null if validation succeds', () => {
-    const { sut } = makeSut()
+    const { sut } = mockSut()
 
     const res = sut.validate({ name: 'any_name' })
     expect(res).toBeFalsy()

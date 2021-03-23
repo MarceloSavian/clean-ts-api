@@ -7,7 +7,7 @@ type SutTypes = {
   sut: LogErrorRepository
 }
 
-const makeSut = (): SutTypes => {
+const mockSut = (): SutTypes => {
   return {
     sut: new LogMongoRepository()
   }
@@ -26,7 +26,7 @@ describe('Mongo Log Repository', () => {
     await errorCollection.deleteMany({})
   })
   test('Should create an log on success', async () => {
-    const { sut } = makeSut()
+    const { sut } = mockSut()
     await sut.logError('test')
     const count = await errorCollection.countDocuments()
     expect(count).toBe(1)
