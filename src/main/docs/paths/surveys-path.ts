@@ -23,5 +23,32 @@ export const surveyPath = {
         $ref: '#/components/unauthorized'
       }
     }
+  },
+  post: {
+    tags: ['Surveys'],
+    summary: 'Create surveys',
+    security: [{
+      apiKeyAuth: []
+    }],
+    requestBody: {
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/schemas/addSurveyParams'
+          }
+        }
+      }
+    },
+    responses: {
+      204: {
+        description: 'Success'
+      },
+      403: {
+        $ref: '#/components/forbidden'
+      },
+      500: {
+        $ref: '#/components/unauthorized'
+      }
+    }
   }
 }
