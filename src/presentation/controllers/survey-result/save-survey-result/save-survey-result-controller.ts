@@ -25,7 +25,6 @@ export class SaveSurveyResultController implements Controller {
       const { answer } = httpRequest.body
       const { accountId } = httpRequest
       const answers = survey.answers.map(a => a.answer)
-
       if (!answers.includes(answer)) return forbidden(new InvalidParamError('answer'))
 
       const surveyResult = await this.saveSurveyResult.save({
