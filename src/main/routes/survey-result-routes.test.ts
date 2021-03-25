@@ -8,6 +8,7 @@ import { SurveyModel } from '@/domain/models/survey'
 import { mockAddSurveyParams, mockSaveSurveyResultParams } from '@/domain/test'
 
 let surveyCollection: Collection
+let surveyResultCollection: Collection
 let accountCollection: Collection
 
 const mockUserOnCollection = async (role?: string): Promise<any> => {
@@ -36,6 +37,11 @@ const insertSurvey = async (): Promise<SurveyModel> => {
   return mongoHelper.map(res.ops[0])
 }
 
+const insertSurveyResult = async (surveyId: string): Promise<SurveyModel> => {
+  const res = await surveyResultCollection.insertOne(mockSaveSurveyResultParams(surveyId))
+  return mongoHelper.map(res.ops[0])
+}
+
 describe('SurveyResult routes', () => {
   beforeAll(async () => {
     await mongoHelper.connect(String(process.env.MONGO_URL))
@@ -47,6 +53,8 @@ describe('SurveyResult routes', () => {
     surveyCollection = await mongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
     accountCollection = await mongoHelper.getCollection('accounts')
+    await accountCollection.deleteMany({})
+    surveyResultCollection = await mongoHelper.getCollection('surveyResults')
     await accountCollection.deleteMany({})
   })
 
@@ -74,6 +82,15 @@ describe('SurveyResult routes', () => {
       await request(app)
         .get('/api/surveys/any_id/results')
         .expect(403)
+    })
+    test('Should return 200 on save-survey-result with access-token', async () => {
+      const accessToken = await mockUserOnCollection('admin')
+      const surveyId = await insertSurvey()
+      await insertSurveyResult(surveyId.id)
+      await request(app)
+        .get(`/api/surveys/${surveyId.id}/results`)
+        .set('x-access-token', accessToken)
+        .expect(200)
     })
   })
 })
